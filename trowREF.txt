@@ -1,0 +1,16 @@
+Sub foo()
+
+'Small sample of a frequently used vba code
+' it returns the row number property of the last row in given column
+
+Dim wb as workbook
+Dim tRow as integer
+
+Set wb = thisworkbook
+
+tRow = wb.sheets(1).cells(rows.count,1).end(xlup).row
+
+Debug.print tRow
+
+
+End sub
