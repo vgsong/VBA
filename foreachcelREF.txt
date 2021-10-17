@@ -1,0 +1,25 @@
+Sub foo()
+
+' this is a simple for each iteration
+' there are multiple ways to iterate through cells in excel VBA
+' I think that for each is the most efficient in terms of speed instead of using a for loop
+' but everything depends obviously
+
+
+Dim wb as workbook
+Dim sRng as range
+Dim cel as range
+
+
+Set wb = thisworkbook
+Set sRng = wb.sheets(1).range("A1:A5")
+
+For each cel in sRng
+
+	Debug.print cel.value
+
+Next cel
+
+
+
+End sub
