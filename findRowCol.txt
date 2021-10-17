@@ -1,0 +1,29 @@
+
+' This is also another really good VBA function
+' it searches for given string, and return the row/column number
+' used to when needed to find an specific row/column in an irregular data dump/report
+
+Public Function fRow(fStr As String) As Long
+
+Dim frng As Range
+
+    ' The search scope is based in row range "1:100" currently hard coded. Change if necessary
+    Set frng = Rows(1 & ":" & 100).Find(what:=fStr, LookIn:=xlValues, lookat:=xlWhole)
+    
+    fRow = frng.Row
+
+End Function
+
+
+Public Function fCol(fStr As String) As Long
+
+Dim frng As Range
+    
+    ' The search scope is based in column range "A:Z" currently hard coded. Change if necessary
+    Set frng = Columns("A:Z").Find(what:=fStr, LookIn:=xlValues, lookat:=xlWhole)
+    
+    fCol = frng.Column
+
+End Function
+
+
