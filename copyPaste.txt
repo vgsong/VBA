@@ -1,0 +1,34 @@
+Sub foo()
+
+' This is the best way to change values between existing ranges in workbook
+' usually copy/paste method tries to imitate the actually COPY/PASTE command
+' which is not efficient
+
+' One effective way to copy/paste is to create two range objects
+' and have them exchange values between them
+' you can also exchange between workbooks 
+
+
+Dim wb as workbook
+
+' Source Range
+Dim sRng as range
+
+' Destination Range
+Dim dRng as range
+
+    
+    ' Get all the data in the current region
+    Set sRng = Sheet1.Range("A1").CurrentRegion
+
+      ' where the data will be pasted/transferred
+    Set dRng = Sheet2.Range("A1")
+
+      ' Resize destination range to fit the data from source Range
+    Set dRng = rgDest.Resize(rgSrc.Rows.Count, rgSrc.Columns.Count)
+
+      ' Make the values in destination range the same as source range    
+    dRng.Value2 = sRng.Value2
+
+
+End sub

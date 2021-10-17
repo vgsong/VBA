@@ -1,0 +1,37 @@
+Sub foo()
+
+'Simple VBA sample for text to column method
+' the sample below is an example of fixedwidth
+' Array(x,y) where x is the breakline position and Y is the datatype that will be converted after textToCol
+' 
+
+Dim wb as workbook
+Dim trow as integer
+
+
+Set wb = ThisWorkbook
+
+trow = crow("CLEAN", 3)
+
+Sheets("CLEAN").Range("A:A").TextToColumns Destination:=Range("A1"), _
+	DataType:=xlFixedWidth, _
+	OtherChar:="~", _
+	FieldInfo:=Array(Array(0, 2), _
+	Array(4, 1), _
+	Array(23, 1), _
+	Array(31, 1), _
+	Array(40, 1), _
+	Array(53, 1), _
+	Array(67, 1), _
+	Array(79, 1), _
+	Array(90, 1), _
+	Array(102, 1), _
+	Array(113, 1), _
+	Array(125, 1), _
+	Array(131, 1)), _
+	TrailingMinusNumbers:=True 
+
+
+
+
+End Sub
