@@ -1,6 +1,6 @@
 # VBA
 
-This repository is used as a quick reference guide for VBA which I use almost daily for MS Excel automation at work. Excel VBA is useful when needed to do quick automation functions in excel. 
+This repository is used as a quick reference guide for VBA which I use almost daily for MS Excel automation at work. Excel VBA is useful for quick automation functions in excel.
 
 copyPaste.txt - Efficient method in transferring values from cell to cell.
 
