@@ -1,0 +1,47 @@
+Sub create_itd_csv()
+
+Application.Calculation = xlCalculationAutomatic 'refresh all cell refs and formula to reflect data entered by VBA'
+Application.ScreenUpdating = False 'speeds up script by not showing line by line actions'
+Application.DisplayAlerts = False 'any alert pop up messages will be ommited'
+
+
+    Dim wb          As Workbook
+    Dim twb         As Workbook
+    
+    Dim cel         As Range
+    Dim sRng        As Range
+    Dim dRng        As Range
+    
+    Dim tRow        As Integer
+    Dim fpath       As String
+    
+    
+    
+        Set wb = ThisWorkbook
+        tRow = wb.Sheets("DTEKINVDATA").Cells(Rows.Count, 1).End(xlUp).Row
+        Set sRng = wb.Sheets("DTEKINVDATA").Range("A2:F" & tRow)
+        
+        
+        fpath = "C:\Users\V Song\Box\Invoicing\Energy_Sector\SoCal Gas and Others\_1ITD_MASTER\_SOURCE"
+        
+        Set twb = Workbooks.Add
+        
+        Set dRng = twb.Sheets(1).Range("A1")
+        Set dRng = dRng.Resize(sRng.Rows.Count, sRng.Columns.Count)
+        
+        
+        dRng.Value2 = sRng.Value2
+        
+        twb.SaveAs fpath & "\ITD_DATA.csv", FileFormat:=xlCSV
+        twb.Close
+        
+        MsgBox "Job Done! Saved at: " & fpath
+        
+        Set twb = Nothing
+        Set wb = Nothing
+        Set sRng = Nothing
+        Set dRng = Nothing
+        
+        
+
+End Sub
