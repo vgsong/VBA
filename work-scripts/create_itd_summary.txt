@@ -21,8 +21,8 @@ Application.DisplayAlerts = False 'any alert pop up messages will be ommited'
         tRow = wb.Sheets("DTEKINVDATA").Cells(Rows.Count, 1).End(xlUp).Row
         Set sRng = wb.Sheets("DTEKINVDATA").Range("A2:F" & tRow)
         
-        
-        fpath = "C:\Users\V Song\Box\Invoicing\Energy_Sector\SoCal Gas and Others\_1ITD_MASTER\_SOURCE"
+        ' store fpath in fpath variable
+        fpath = ""
         
         Set twb = Workbooks.Add
         
