@@ -1,5 +1,5 @@
 # VBA
-Just uploaded some frequent VBA scripts I use as reference
+VBA repository
 
 ref-scripts is a reference folder that contains some of VBA script I use frequently
 
