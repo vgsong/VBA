@@ -1,0 +1,238 @@
+'RETIRED SUB -- USING PYTHON INSTEAD OF THIS MESS
+
+
+'It reads each PDF file from .Path, renames the PDF with invoice number, then logs in into thisworkbook
+
+
+
+
+Dim regex As New RegExp
+
+Sub mainall()
+
+
+    Dim fpath       As String
+    Dim myfile      As String
+
+    Dim wb          As Workbook
+    Dim pdfStr      As String
+
+
+        Set wb = ThisWorkbook
+
+        fpath = wb.Path & "\" '!
+
+        myfile = Dir(fpath)
+
+
+            Do While myfile <> ""
+
+                If InStr(myfile, wb.Name) > 0 Then
+
+                Else
+
+                    pdfStr = pdftostr(fpath & myfile)
+
+                    Call frenamer(pdfStr, fpath, myfile)
+
+                End If
+
+                myfile = Dir()
+
+            Loop
+
+        MsgBox "Job Done!"
+
+End Sub
+
+Private Sub frenamer(ByRef pdfStr As String, ByRef fpath As String, ByRef myfile As String)
+
+    Dim pdfinvoice      As String
+    'Dim pdpo           As String
+    Dim pdfdaterng      As String
+    Dim pdfprono        As Variant
+    Dim pdftotals       As String
+    Dim pdfro           As String
+
+
+    Dim strpos          As Long
+
+    Dim wb              As Workbook
+
+    Dim tRow            As Integer
+
+    Dim sRng            As Range
+    Dim resu            As Variant
+
+
+    Set wb = ThisWorkbook
+
+    'pdfinvoice: 7 is hardcoded len, invoice number follows 7 digit
+    'pdfponum: 12 is hardcoded len, project number follows 12 digit
+    pdfinvoice = pdfsearch(pdfStr, "Invoice No:", 7) 'uses function to search string from pdfstr extract
+'    pdfprono = pdfsearch(pdfStr, "Project No:", 12) 'for all the other projects
+    pdfprono = pdfsearch(pdfStr, "Project 1", 11)  'for 1112 projects ONLY
+    pdfro = pdfsearch(pdfStr, "Release Order:", 12)
+
+    pdftotals = Trim(regeremove(pdfsearch(pdfStr, "Total this Report", 10), "[Page]"))
+
+    'pdfdaterng = pdfsearch(pdfStr, "Professional Services", 45) 'can pick up by using regex instead
+    'pdfdaterng = pdfregex(Trim(pdfdaterng), "from \w* \d*, \d* to \w* \d*, \d*")
+    'Debug.Print pdfStr
+
+    tRow = wb.Sheets(1).Cells(Rows.Count, 1).End(xlUp).Row + 1
+
+        'add logger subfunction here maybe pass an array with the all string found from above
+'        If draftchk(pdfStr) = True Then  ' if <Draft> tag is found, then tag the filename with "(DRAFT)" else just rename it with INVOICE NUMBER
+'            pdfinvoice = pdfsearch(pdfStr, "Invoice No:", 7) & " (DRAFT)"
+'            Name fpath & myfile As fpath & pdfinvoice & ".pdf"
+'            wb.Sheets(1).Cells(tRow, 4).Value = "DRAFT"
+'
+'        Else
+'            pdfinvoice = pdfsearch(pdfStr, "Invoice No:", 7)
+'            Name fpath & myfile As fpath & pdfinvoice & ".pdf"
+'
+'        End If
+
+
+    Set sRng = wb.Sheets("FPATHMAPP").Cells(1, 1).CurrentRegion
+
+
+
+    'ignores if vlookup returns na()
+    On Error Resume Next
+ '   resu = Application.VLookup(Left(pdfprono, 4), srng, 2, True)
+
+    'populates the table in REPORT sheets
+    With wb.Sheets(1)
+
+'        .Cells(tRow, 1).Value = Format(Now(), "mm/dd/yy, hh:mm")
+        .Cells(tRow, 2).Value = CDbl(pdftotals)
+        .Cells(tRow, 3).Value = Left(pdfinvoice, 7) 'excluding the DRAFT
+
+        .Cells(tRow, 4).Value = CDbl(Trim(pdfro))
+        .Cells(tRow, 4).WrapText = False
+        .Cells(tRow, 1).Value = pdfprono
+ '       .Cells(tRow, 7).Value = resu
+
+'---- uncomment if hyperlink will be used ----
+
+'        .Hyperlinks.Add anchor:=.Cells(tRow, 8), _
+'        Address:="Y:\Energy Sector\SoCal Gas and Others\" & .Cells(tRow, 7).Value & "\", _
+'        TextToDisplay:="go to folderpath"
+'
+'        .Hyperlinks.Add anchor:=.Cells(tRow, 9), _
+'        Address:="Y:\Energy Sector\SoCal Gas and Others\" & .Cells(tRow, 7).Value & "\" & "ITD - " & Left(pdfprono, 4) & ".xlsx", _
+'        TextToDisplay:="go to ITD"
+
+    End With
+
+
+    wb.Sheets(1).Rows.RowHeight = 14.4
+
+
+End Sub
+
+Private Function draftchk(ByRef pdfStr As String) As Boolean
+
+'just a <Draft> tag checker
+'returns boolean if instr found is  > 0
+
+    If InStr(pdfStr, "<Draft>") > 0 Then
+
+        draftchk = True
+
+    Else
+
+        draftchk = False
+
+    End If
+
+End Function
+Private Function regeremove(ByRef rgstr As String, ByRef regepatt As String)
+
+    With regex
+
+        .Global = True
+        .Pattern = regepatt
+
+    End With
+
+    regeremove = Trim(regex.Replace(rgstr, ""))
+
+End Function
+Private Function pdfsearch(ByVal pdfStr As String, ByVal strsearch As String, ByVal wcount As Integer) As String
+
+    Dim searchlen   As Integer
+    Dim strpos      As Long
+
+    'general string finder
+    'some pdfstr will need to use regex to further clean data
+    searchlen = Len(strsearch) + 1
+
+    strpos = InStr(pdfStr, strsearch) + searchlen
+
+    pdfsearch = Mid(pdfStr, strpos, wcount)
+
+
+End Function
+
+
+
+
+Private Function pdftostr(ByVal fpath As String)
+
+    Dim objAVDoc        As New AcroAVDoc
+    Dim objPDDoc        As New AcroPDDoc
+    Dim objPage         As AcroPDPage
+    Dim objSelection   As AcroPDTextSelect
+    Dim objHighlight    As AcroHiliteList
+    Dim pageNum         As Long
+    Dim strText         As String
+
+    strText = ""
+
+    If objAVDoc.Open(fpath, "") Then
+
+          Set objPDDoc = objAVDoc.GetPDDoc
+
+          'Application.Wait (Now + TimeValue("0:00:02"))
+
+              For pageNum = 0 To objPDDoc.GetNumPages() - 1
+
+                 Set objPage = objPDDoc.AcquirePage(pageNum)
+                 Set objHighlight = New AcroHiliteList
+                 objHighlight.Add 0, 10000 ' Adjust this up if it's not getting all the text on the page
+                 Set objSelection = objPage.CreatePageHilite(objHighlight)
+
+                 If Not objSelection Is Nothing Then
+
+                    For tCount = 0 To objSelection.GetNumText - 1
+
+                       strText = strText & objSelection.GetText(tCount)
+
+                    Next tCount
+
+                 End If
+
+              Next pageNum
+
+              objAVDoc.Close 1
+
+
+       End If
+
+    objAVDoc.Close 1
+
+
+    pdftostr = strText
+
+
+    Set objAVDoc = Nothing
+    Set objPDDoc = Nothing
+    Set objPage = Nothing
+    Set objHighlight = Nothing
+    Set objSelection = Nothing
+
+
+End Function
