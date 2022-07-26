@@ -1,5 +1,4 @@
-# VBA
-VBA repository
+# work-scripts VBA
 
 ref-scripts is a reference folder that contains some of VBA script I use frequently
 
