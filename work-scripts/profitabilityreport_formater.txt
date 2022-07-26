@@ -1,0 +1,171 @@
+Option Explicit
+
+Dim wb          As Workbook
+
+Dim sRng        As Range
+Dim cel         As Range
+
+Dim tRow        As Integer
+
+
+Sub formatCUR()
+
+' use this script to clean the PDF provided by Teresa
+' Obtain the PDF, convert to excel
+' make sure source data range goes from A to M
+' bring data to CUR sheet
+' execute sectorCUR script. for example "waterCUR()" script for water sector
+
+
+    Set wb = ThisWorkbook
+    
+        With wb.Sheets(“SECTOR”)
+
+            .Cells.UnMerge
+            .Rows("1:3").EntireRow.Delete
+
+        End With
+
+    tRow = wb.Sheets(“SECTOR”).Cells(Rows.Count, 1).End(xlUp).Row
+
+    Set sRng = wb.Sheets(“SECTOR”).Range("A4:A" & tRow)
+
+        For Each cel In sRng
+
+            If cel.Value = "Project Profitability - Education" Then
+
+                wb.Sheets(“SECTOR”).Rows(cel.Row & ":" & cel.Row + 3).EntireRow.Delete
+
+            Else
+            End If
+
+        Next cel
+
+    wb.Sheets(“SECTOR”).Range("A2:P" & tRow).Font.Size = 10
+    
+
+    Set sRng = Nothing
+
+        tRow = wb.Sheets(“SECTOR”).Cells(Rows.Count, 1).End(xlUp).Row
+
+        wb.Sheets(“SECTOR”).Columns("B:P").HorizontalAlignment = xlJustify
+        wb.Sheets(“SECTOR”).Columns("B:P").HorizontalAlignment = xlRight
+
+    Set sRng = wb.Sheets(“SECTOR”).Range("A1:A" & tRow)
+
+        For Each cel In sRng
+
+            If Left(cel.Value, 15) = "Project Number:" Then
+
+                With cel.Offset(0, 6)
+                
+                    .Font.Size = 12
+                    .Font.Bold = True
+                    .Font.Color = RGB(0, 0, 128)
+                    .HorizontalAlignment = xlCenter
+                    .Value = cel.Value
+                    .WrapText = False
+                    
+                End With
+                
+                cel.Clear
+
+            ElseIf Left(cel.Value, 5) = "Total" Then
+            
+                wb.Sheets(“SECTOR”).Range("A" & cel.Row & ":P" & cel.Row).Interior.Color = RGB(184, 204, 228)
+            
+            Else
+            
+                cel.WrapText = False
+
+            End If
+
+        Next cel
+
+
+    Set sRng = Nothing
+
+
+        wb.Sheets(“SECTOR”).Range("A1").CurrentRegion.Borders.LineStyle = xlContinuous
+        wb.Sheets(“SECTOR”).Columns("M").Columns.Insert
+        wb.Sheets(“SECTOR”).Range("M1").Value = "Comments"
+
+
+        With wb.Sheets(“SECTOR”).Range("A1:Q1")
+
+            .HorizontalAlignment = xlCenter
+            .VerticalAlignment = xlCenter
+            .Font.Size = 11
+            .Interior.Color = RGB(184, 204, 228)
+            .Font.Bold = True
+
+        End With
+
+
+        With wb.Sheets(“SECTOR”).PageSetup
+        
+            .LeftHeader = "&B PROFITABILITY REPORT - EDUCATION SECTOR"
+            .LeftFooter = "&B &Kff0000 CONFIDENTIAL"
+            .CenterFooter = "&D"
+            .RightFooter = "Page " & "&P"
+            .Orientation = xlLandscape
+            .PrintTitleRows = "$1:$1"
+            
+        End With
+        
+        
+        With wb.Sheets(“SECTOR”)
+        
+            .Columns(10).HorizontalAlignment = xlCenter
+            .Columns(14).HorizontalAlignment = xlCenter
+            
+        End With
+        
+
+
+    Set sRng = Nothing
+
+    tRow = wb.Sheets(“SECTOR”).Cells(Rows.Count, 1).End(xlUp).Row
+
+    Set sRng = wb.Sheets(“SECTOR”).Range("A1:A" & tRow)
+    
+
+
+        For Each cel In sRng
+        
+            If Left(cel.Offset(0, 6).Value, 15) = "Project Number:" Then
+            
+                cel.Offset(0, 6).Font.Name = "Arial"
+                
+                With wb.Sheets(“SECTOR”).Range("A" & cel.Row & ":Q" & cel.Row)
+                
+                    .Borders(xlDiagonalDown).LineStyle = xlNone
+                    .Borders(xlDiagonalUp).LineStyle = xlNone
+                    .Borders(xlEdgeLeft).LineStyle = xlNone
+                    .Borders(xlEdgeTop).LineStyle = xlNone
+                    .Borders(xlEdgeBottom).LineStyle = xlNone
+                    .Borders(xlEdgeRight).LineStyle = xlNone
+                    .Borders(xlInsideVertical).LineStyle = xlNone
+                    .Borders(xlInsideHorizontal).LineStyle = xlNone
+                    
+                    
+                    .Borders(xlEdgeLeft).LineStyle = xlContinuous
+                    .Borders(xlEdgeTop).LineStyle = xlContinuous
+                    .Borders(xlEdgeBottom).LineStyle = xlContinuous
+                    .Borders(xlEdgeRight).LineStyle = xlContinuous
+                    
+                    
+                End With
+                
+
+            Else
+
+            End If
+    
+        
+        Next cel
+    
+
+
+
+End SubA
