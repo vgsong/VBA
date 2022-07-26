@@ -1,6 +1,6 @@
 # work-scripts VBA
 
-##### mostly used for quick excel automation, it helps reduce manual steps/procedures for reporting.
+#### mostly used for quick excel automation, it helps reduce manual steps/procedures for reporting.
 
 create_itd_summary: Just a quick script that saves all the projects Job-to-Date detail in a dir
 
