@@ -1,5 +1,7 @@
 # work-scripts VBA
 
-ref-scripts is a reference folder that contains some of VBA script I use frequently
+create_itd_summary: Just a quick script that saves all the projects Job-to-Date detail in a dir
 
-work-scripts contains VBA scripts I use at work daily. Some of them have been retired and being used in Python instead (much simpler/easier)
+pdf_reader: VBA script that opens pdf invocices in a dir and transposes basic information into excel. Currently retired and written in Python.
+
+profitabilityreport_formatter: VBA that cleans and formats monthly financial reports by sector. Removes the manual steps (i.e. formatting hell) 
